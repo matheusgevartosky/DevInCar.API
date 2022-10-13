@@ -1,5 +1,8 @@
 using DevInCar.API.Data.Context;
+using DevInCar.API.GraphQL.Queries;
 using DevInCar.API.Models;
+using DevInCar.API.Repositories;
+using DevInCar.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -10,13 +13,22 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services
+    .AddSingleton<IVehicleRepository, VehicleRepository>()
+    .AddScoped<IVehicleService, VehicleService>();
+
+builder.Services
     .AddGraphQLServer()
     .AddAuthorization()
+
+    .AddQueryType()
+        .AddTypeExtension<VehicleQueries>()
+
+    .AddType<Vehicle>()
 
     .AddInMemorySubscriptions()
     .AddApolloTracing();
 
-builder.Services.AddDbContext<Context>(
+builder.Services.AddDbContextFactory<Context>(
         options => options.UseSqlServer(builder.Configuration.GetConnectionString("DevInCarDB")
     )
   );

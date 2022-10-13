@@ -1,53 +1,160 @@
-﻿using DevInCar.API.Models;
+﻿using DevInCar.API.Data.Context;
+using DevInCar.API.Models;
 using DevInCar.API.Models.Enum;
+using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace DevInCar.API.Repositories
 {
     public class VehicleRepository : IVehicleRepository
     {
-        public void AddVeiculo(Vehicle veiculo)
+
+        private readonly IDbContextFactory<Context> _dbContextFactory;
+
+        public VehicleRepository(IDbContextFactory<Context> dbContextFactory)
         {
-            
+            _dbContextFactory = dbContextFactory;
         }
 
-        public void AlterarCor(string Color)
+        public string AddVeiculo(Vehicle veiculo)
         {
-            throw new NotImplementedException();
+            using (var context = _dbContextFactory.CreateDbContext())
+            {
+                context.Vehicles.Add(veiculo);
+                context.SaveChanges();
+            }
+            return veiculo.Id;
         }
 
-        public void ChangeValue(double value)
+        public string AlterarCor(string id, string Color)
         {
-            throw new NotImplementedException();
+            using (var context = _dbContextFactory.CreateDbContext())
+            {
+                var veiculo = context.Vehicles.FirstOrDefault(x => x.Id == id);
+                if (veiculo != null)
+                {
+                    veiculo.Color = Color;
+                    context.SaveChanges();
+                }
+                return "Veiculo não cadastrado";
+            }
         }
 
-        public IEnumerable<IVehicle> GetVeiculos(VehicleType type)
+        public string ChangeValue(string id, double value)
         {
-            throw new NotImplementedException();
+
+            using (var context = _dbContextFactory.CreateDbContext())
+            {
+                var veiculo = context.Vehicles.FirstOrDefault(x => x.Id == id);
+                if (veiculo != null)
+                {
+                    veiculo.Value = value;
+                    context.SaveChanges();
+                    return "Valor atualizado";
+                }
+                return "Veiculo não cadastrado.";
+
+            }
         }
 
-        public IEnumerable<Vehicle> GetVeiculosDisponiveis()
+        public IEnumerable<IVehicle> GetVeiculos(VehicleType? type)
         {
-            throw new NotImplementedException();
+            using (var context = _dbContextFactory.CreateDbContext())
+            {
+                if (type != null)
+                {
+                    return context.Vehicles.Where(x => x.Type == type).ToList();
+                }
+                return context.Vehicles.ToList();
+            }
         }
 
-        public IEnumerable<Vehicle> GetVeiculosVendidos()
+        public IEnumerable<Vehicle> GetVeiculosDisponiveis(VehicleType? type)
         {
-            throw new NotImplementedException();
+            using (var context = _dbContextFactory.CreateDbContext())
+            {
+                if (type != null)
+                {
+                    var VeiculosDisponiveis = context
+                        .Vehicles.Where(x => x.Type == type)
+                        .Where(s => s.Status == true)
+                        .ToList();
+                    return VeiculosDisponiveis;
+                }
+                return context.Vehicles.Where(x => x.Status == true).ToList();
+            }
         }
 
-        public IVehicle GetVendidosMaiorPreço()
+        public IEnumerable<Vehicle> GetVeiculosVendidos(VehicleType? type)
         {
-            throw new NotImplementedException();
+            using (var dbContext = _dbContextFactory.CreateDbContext())
+            {
+                if (type != null)
+                {
+                    var VeiculosVendidos = dbContext
+                        .Vehicles.Where(x => x.Type == type)
+                        .Where(y => y.Status == false)
+                        .ToList();
+                    return VeiculosVendidos;
+                }
+                return dbContext.Vehicles.Where(x => x.Status == false).ToList();
+            }
         }
 
-        public IVehicle GetVendidosMenorPreço()
+        public IVehicle GetVendidosMaiorPreço(VehicleType? type)
         {
-            throw new NotImplementedException();
+            using (var context = _dbContextFactory.CreateDbContext())
+            {
+                if (type != null)
+                {
+                    var veiculo = context
+                        .Vehicles.Where(x => x.Type == type)
+                        .Where(y => y.Status == false);
+                    var maiorPreço = veiculo.OrderByDescending(x => x.saleValue).First();
+
+                    return maiorPreço;
+                }
+                var veiculoSemTipo = context
+                    .Vehicles.Where(x => x.Status == false);
+                var maiorPreçoSemTipo = veiculoSemTipo.OrderByDescending(x => x.saleValue).First();
+                return maiorPreçoSemTipo;
+            }
         }
 
-        public void VenderVeiculo(int id, string idComprador, DateTime dataVenda)
+        public IVehicle GetVendidosMenorPreço(VehicleType? type)
         {
-            throw new NotImplementedException();
+            using (var context = _dbContextFactory.CreateDbContext())
+            {
+                if (type != null)
+                {
+                    var veiculo = context
+                        .Vehicles.Where(x => x.Equals(type))
+                        .Where(y => y.Status == false);
+                    var menorPreço = veiculo.OrderByDescending(x => x.saleValue).Last();
+                    return menorPreço;
+                }
+                var veiculoSemTipo = context
+                    .Vehicles.Where(x => x.Status == false);
+                var menorPreçoSemTipo = veiculoSemTipo.OrderBy(x => x.saleValue).Last();
+                return menorPreçoSemTipo;
+            }
+        }
+
+        public string VenderVeiculo(string id, string idComprador, DateTime dataVenda)
+        {
+            using (var context = _dbContextFactory.CreateDbContext())
+            {
+                var veiculo = context.Vehicles.FirstOrDefault(x => x.Id == id);
+                if (veiculo != null)
+                {
+                    veiculo.BuyerId = idComprador;
+                    veiculo.Status = false;
+                    veiculo.SaleDate = DateTime.Now;
+                    context.SaveChanges();
+                }
+
+                return "Veiculo não cadastrado ";
+            }
         }
     }
 }
