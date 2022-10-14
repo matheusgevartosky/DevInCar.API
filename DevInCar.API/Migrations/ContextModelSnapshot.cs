@@ -24,14 +24,16 @@ namespace DevInCar.API.Migrations
 
             modelBuilder.Entity("DevInCar.API.Models.Vehicle", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("BuyerId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ChassisNumber")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ChassisNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Color")
                         .IsRequired()
@@ -46,8 +48,9 @@ namespace DevInCar.API.Migrations
                     b.Property<int?>("LoadingCapacity")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ManufacturingDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("ManufacturingDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -60,17 +63,18 @@ namespace DevInCar.API.Migrations
                     b.Property<double>("Potency")
                         .HasColumnType("float");
 
-                    b.Property<DateTime?>("SaleDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("SaleDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
                     b.Property<double>("Value")
                         .HasColumnType("float");
+
+                    b.Property<int>("VehicleType")
+                        .HasColumnType("int");
 
                     b.Property<double?>("saleValue")
                         .HasColumnType("float");

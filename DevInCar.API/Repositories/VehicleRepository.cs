@@ -16,17 +16,27 @@ namespace DevInCar.API.Repositories
             _dbContextFactory = dbContextFactory;
         }
 
-        public string AddVeiculo(Vehicle veiculo)
+        public bool AddVeiculo(Vehicle veiculo)
         {
             using (var context = _dbContextFactory.CreateDbContext())
             {
-                context.Vehicles.Add(veiculo);
-                context.SaveChanges();
+                try
+                {
+                    context.Vehicles.Add(veiculo);
+                    return context.SaveChanges() != 0;
+                }catch(Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                    return false;
+                }
+
+
+                
             }
-            return veiculo.Id;
+
         }
 
-        public string AlterarCor(string id, string Color)
+        public string AlterarCor(Guid id, string Color)
         {
             using (var context = _dbContextFactory.CreateDbContext())
             {
@@ -35,12 +45,13 @@ namespace DevInCar.API.Repositories
                 {
                     veiculo.Color = Color;
                     context.SaveChanges();
+                    return "Cor alterada";
                 }
                 return "Veiculo não cadastrado";
             }
         }
 
-        public string ChangeValue(string id, double value)
+        public string ChangeValue(Guid id, double value)
         {
 
             using (var context = _dbContextFactory.CreateDbContext())
@@ -63,7 +74,7 @@ namespace DevInCar.API.Repositories
             {
                 if (type != null)
                 {
-                    return context.Vehicles.Where(x => x.Type == type).ToList();
+                    return context.Vehicles.Where(x => x.VehicleType == type).ToList();
                 }
                 return context.Vehicles.ToList();
             }
@@ -76,7 +87,7 @@ namespace DevInCar.API.Repositories
                 if (type != null)
                 {
                     var VeiculosDisponiveis = context
-                        .Vehicles.Where(x => x.Type == type)
+                        .Vehicles.Where(x => x.VehicleType == type)
                         .Where(s => s.Status == true)
                         .ToList();
                     return VeiculosDisponiveis;
@@ -92,7 +103,7 @@ namespace DevInCar.API.Repositories
                 if (type != null)
                 {
                     var VeiculosVendidos = dbContext
-                        .Vehicles.Where(x => x.Type == type)
+                        .Vehicles.Where(x => x.VehicleType == type)
                         .Where(y => y.Status == false)
                         .ToList();
                     return VeiculosVendidos;
@@ -101,14 +112,14 @@ namespace DevInCar.API.Repositories
             }
         }
 
-        public IVehicle GetVendidosMaiorPreço(VehicleType? type)
+        public Vehicle? GetVendidosMaiorPreço(VehicleType? type)
         {
             using (var context = _dbContextFactory.CreateDbContext())
             {
                 if (type != null)
                 {
                     var veiculo = context
-                        .Vehicles.Where(x => x.Type == type)
+                        .Vehicles.Where(x => x.VehicleType == type)
                         .Where(y => y.Status == false);
                     var maiorPreço = veiculo.OrderByDescending(x => x.saleValue).First();
 
@@ -116,12 +127,13 @@ namespace DevInCar.API.Repositories
                 }
                 var veiculoSemTipo = context
                     .Vehicles.Where(x => x.Status == false);
-                var maiorPreçoSemTipo = veiculoSemTipo.OrderByDescending(x => x.saleValue).First();
+
+                var maiorPreçoSemTipo = veiculoSemTipo.OrderByDescending(x => x.saleValue).FirstOrDefault();
                 return maiorPreçoSemTipo;
             }
         }
 
-        public IVehicle GetVendidosMenorPreço(VehicleType? type)
+        public Vehicle? GetVendidosMenorPreço(VehicleType? type)
         {
             using (var context = _dbContextFactory.CreateDbContext())
             {
@@ -135,25 +147,25 @@ namespace DevInCar.API.Repositories
                 }
                 var veiculoSemTipo = context
                     .Vehicles.Where(x => x.Status == false);
-                var menorPreçoSemTipo = veiculoSemTipo.OrderBy(x => x.saleValue).Last();
+                var menorPreçoSemTipo = veiculoSemTipo.OrderBy(x => x.saleValue).LastOrDefault();
                 return menorPreçoSemTipo;
             }
         }
 
-        public string VenderVeiculo(string id, string idComprador, DateTime dataVenda)
+        public bool VenderVeiculo(Guid id, string buyerId, DateOnly date)
         {
             using (var context = _dbContextFactory.CreateDbContext())
             {
                 var veiculo = context.Vehicles.FirstOrDefault(x => x.Id == id);
                 if (veiculo != null)
                 {
-                    veiculo.BuyerId = idComprador;
+                    veiculo.BuyerId = buyerId;
                     veiculo.Status = false;
-                    veiculo.SaleDate = DateTime.Now;
-                    context.SaveChanges();
+                    veiculo.SaleDate = date.ToString();
+                    return context.SaveChanges() != 0;
                 }
 
-                return "Veiculo não cadastrado ";
+                return false;
             }
         }
     }

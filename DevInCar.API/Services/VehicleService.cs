@@ -1,4 +1,5 @@
-﻿using DevInCar.API.Models;
+﻿using DevInCar.API.DTOs;
+using DevInCar.API.Models;
 using DevInCar.API.Models.Enum;
 using DevInCar.API.Repositories;
 
@@ -13,19 +14,20 @@ namespace DevInCar.API.Services
             _vehicleRepository = vehicleRepository;
         }
 
-        public string AddVehicle(VehicleType tipo, Vehicle veiculo)
+        public bool AddVehicle(CarDTO carDto)
         {
-            return _vehicleRepository.AddVeiculo(veiculo);
+            Vehicle vehicle = (Vehicle)carDto;
+            return _vehicleRepository.AddVeiculo(vehicle);
         }
 
-        public string ChangeColor(string id, string color)
+        public string ChangeColor(Guid id, string color)
         {
             return _vehicleRepository.AlterarCor(id, color);
         }
 
-        public string ChangeValue(string id, string color)
+        public string ChangeValue(Guid id, double value)
         {
-            return _vehicleRepository.AlterarCor(id, color);
+            return _vehicleRepository.ChangeValue(id, value);
         }
 
         public IEnumerable<IVehicle> GetVehicle(VehicleType? type)
@@ -43,17 +45,17 @@ namespace DevInCar.API.Services
             return _vehicleRepository.GetVeiculosVendidos(type);
         }
 
-        public IVehicle GetSoldHigherPrice(VehicleType type)
+        public IVehicle? GetSoldHigherPrice(VehicleType? type)
         {
             return _vehicleRepository.GetVendidosMaiorPreço(type);
         }
 
-        public IVehicle GetSoldLowerPrice(VehicleType type)
+        public IVehicle? GetSoldLowerPrice(VehicleType? type)
         {
             return _vehicleRepository.GetVendidosMenorPreço(type);
         }
 
-        public string SellVehicle(string id, string buyerId, DateTime date)
+        public bool SellVehicle(Guid id, string buyerId, DateOnly date)
         {
             return _vehicleRepository.VenderVeiculo(id, buyerId, date);
         }

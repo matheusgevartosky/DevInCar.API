@@ -5,14 +5,15 @@ namespace DevInCar.API.Repositories
 {
     public interface IVehicleRepository
     {
-        string AddVeiculo(Vehicle veiculo);
-        string AlterarCor(string id, string Color);
-        string ChangeValue(string id, double value);
+        bool AddVeiculo(Vehicle veiculo);
+        string AlterarCor(Guid id, string Color);
+        string ChangeValue(Guid id, double value);
         IEnumerable<IVehicle> GetVeiculos(VehicleType? type);
         IEnumerable<Vehicle> GetVeiculosDisponiveis(VehicleType? type);
         IEnumerable<Vehicle> GetVeiculosVendidos(VehicleType? type);
-        IVehicle GetVendidosMaiorPreço(VehicleType? type);
-        IVehicle GetVendidosMenorPreço(VehicleType? type);
-        string VenderVeiculo(string id, string idComprador, DateTime dataVenda);
+        Vehicle GetVendidosMaiorPreço(VehicleType? type);
+        Vehicle GetVendidosMenorPreço(VehicleType? type);
+
+        bool VenderVeiculo(Guid id, string buyerId, DateOnly date);
     }
 }

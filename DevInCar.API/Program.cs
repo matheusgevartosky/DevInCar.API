@@ -1,4 +1,6 @@
 using DevInCar.API.Data.Context;
+using DevInCar.API.DTOs;
+using DevInCar.API.GraphQL.Mutations;
 using DevInCar.API.GraphQL.Queries;
 using DevInCar.API.Models;
 using DevInCar.API.Repositories;
@@ -22,8 +24,14 @@ builder.Services
 
     .AddQueryType()
         .AddTypeExtension<VehicleQueries>()
+        .AddTypeExtension<SalesQueries>()
 
-    .AddType<Vehicle>()
+    .AddMutationType()
+        .AddTypeExtension<VehiclesMutation>()
+        .AddTypeExtension<SalesMutation>()
+
+        .AddType<Vehicle>()
+        .AddType<CarDTO>()
 
     .AddInMemorySubscriptions()
     .AddApolloTracing();
