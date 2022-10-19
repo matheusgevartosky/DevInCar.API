@@ -19,7 +19,7 @@ namespace DevInCar.API.Services
             return _userRepository.AddUser(user);
         }
 
-        public User? GetUser(string id)
+        public IEnumerable<User?> GetUser(string id)
         {
             return _userRepository.getUser(id);
         }

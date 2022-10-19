@@ -11,9 +11,10 @@ namespace DevInCar.API.GraphQL.Mutations
     public class VehiclesMutation
     {
         [Authorize]
-        public async Task<bool> AddCarMutation([Service] IVehicleService service, CarDTO carDto, [Service] ITopicEventSender eventSender)
+        [GraphQLName("add_car")]
+        public async Task<bool> AddCarMutation([Service] IVehicleService service, CarDTO input, [Service] ITopicEventSender eventSender)
         {
-            Vehicle vehicle = (Vehicle)carDto;
+            Vehicle vehicle = (Vehicle)input;
             var returnSubscription = new SubscriptionView(vehicle);
             await eventSender.SendAsync(vehicle.VehicleType, returnSubscription);
             await eventSender.SendAsync(nameof(VehiclesSubscription.addedVehicle), returnSubscription);
@@ -21,9 +22,10 @@ namespace DevInCar.API.GraphQL.Mutations
  
         }
         [Authorize]
-        public async Task<bool> AddTruckMutation([Service] IVehicleService service, TruckDTO truckDto, [Service] ITopicEventSender eventSender)
+        [GraphQLName("add_truck")]
+        public async Task<bool> AddTruckMutation([Service] IVehicleService service, TruckDTO input, [Service] ITopicEventSender eventSender)
         {
-            Vehicle vehicle = (Vehicle)truckDto;
+            Vehicle vehicle = (Vehicle)input;
             var returnSubscription = new SubscriptionView(vehicle);
             await eventSender.SendAsync(vehicle.VehicleType, returnSubscription);
             await eventSender.SendAsync(nameof(VehiclesSubscription.addedVehicle), returnSubscription);
@@ -31,21 +33,23 @@ namespace DevInCar.API.GraphQL.Mutations
 
         }
         [Authorize]
-        public async Task<bool> AddMothrcicleMutation([Service] IVehicleService service, MotorcicleDTO motorcicleDto, [Service] ITopicEventSender eventSender)
+        [GraphQLName("add_mothorcicle")]
+        public async Task<bool> AddMothrcicleMutation([Service] IVehicleService service, MotorcicleDTO input, [Service] ITopicEventSender eventSender)
         {
-            Vehicle vehicle = (Vehicle)motorcicleDto;
+            Vehicle vehicle = (Vehicle)input;
             var returnSubscription = new SubscriptionView(vehicle);
             await eventSender.SendAsync(vehicle.VehicleType, returnSubscription);
             await eventSender.SendAsync(nameof(VehiclesSubscription.addedVehicle), returnSubscription);
             return service.AddVehicle(vehicle);
         }
 
-       
+        [GraphQLName("change_color")]
         public async Task<string> ChangeColor([Service] IVehicleService service, string id, string color, [Service] ITopicEventSender eventSender)
         {
             return service.ChangeColor(id, color);
         }
 
+        [GraphQLName("change_value")]
         public async Task<string> ChangeValue([Service] IVehicleService service, string id, double value, [Service]ITopicEventSender eventSender)
         {
             return service.ChangeValue(id, value);

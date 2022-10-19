@@ -11,6 +11,7 @@ namespace DevInCar.API.GraphQL.Mutations
     public class SalesMutation
     {
         [Authorize]
+        [GraphQLName("sell_vehicle")]
         public async Task<Vehicle?> SellVehicle([Service] IVehicleService service, string id, string idComprador, DateOnly date ,[Service] ITopicEventSender eventSender)
         {
             var vehicle =  service.SellVehicle(id, idComprador, date);

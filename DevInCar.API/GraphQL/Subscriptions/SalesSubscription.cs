@@ -8,9 +8,11 @@ namespace DevInCar.API.GraphQL.Subscriptions
     public class SalesSubscription
     {
         [Subscribe]
+        [GraphQLName("sold_vehicle")]
         public SubscriptionView SoldVehicle([EventMessage] SubscriptionView returnSubscription) => returnSubscription;
 
         [Subscribe]
+        [GraphQLName("sold_vehicle(type!)")]
         public SubscriptionView SoldVehicleWithFilter([Topic] VehicleType vehicleType, [EventMessage] SubscriptionView returnSubscription) => returnSubscription;
     }
 }

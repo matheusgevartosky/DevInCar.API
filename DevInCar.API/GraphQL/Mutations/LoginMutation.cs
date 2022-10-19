@@ -10,8 +10,10 @@ using System.Text;
 namespace DevInCar.API.GraphQL.Mutations
 {
     [ExtendObjectType(OperationTypeNames.Mutation)]
+
     public class LoginMutation
     {
+        [GraphQLName("User_login")]
         public string UserLogin([Service] IOptions<TokenSettings> tokenSettings,
         [Service] IUserService service,
         LoginDTO login)

@@ -8,16 +8,13 @@ namespace DevInCar.API.GraphQL.Mutations
     [ExtendObjectType(OperationTypeNames.Mutation)]
     public class UserMutation
     {
-        public async Task<bool> CreateUser([Service] IUserService service, UserDTO dto)
+        public async Task<bool> CreateUser([Service] IUserService service, UserDTO input)
         {
-            User user = (User)dto;
+            User user = (User)input;
             return service.CreateUser(user);
         }
 
-        [Authorize]
-        public async Task<User?> GetUser([Service] IUserService service, string? id)
-        {
-            return service.GetUser(id);
-        }
+        
+
     }
 }

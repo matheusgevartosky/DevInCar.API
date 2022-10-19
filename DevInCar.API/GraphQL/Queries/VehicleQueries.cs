@@ -13,7 +13,7 @@ namespace DevInCar.API.GraphQL.Queries
         {
             return repository.GetVeiculos(type);
         }*/
-
+        [GraphQLName("get_vehicle(type?)")]
         public IEnumerable<IVehicle> GetVehicle([Service] IVehicleService service, VehicleType? type)
         {
             return service.GetVehicle(type);

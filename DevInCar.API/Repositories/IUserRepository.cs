@@ -7,6 +7,6 @@ namespace DevInCar.API.Repositories
     {
         bool AddUser(User user);
         User? Authentication(LoginDTO userDto);
-        User? getUser(string id);
+        IEnumerable<User?> getUser(string id);
     }
 }

@@ -7,6 +7,6 @@ namespace DevInCar.API.Services
     {
         User? AuthenticateUser(LoginDTO dto);
         bool CreateUser(User user);
-        User? GetUser(string id);
+        IEnumerable<User?> GetUser(string id);
     }
 }

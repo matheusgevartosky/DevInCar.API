@@ -23,13 +23,17 @@ namespace DevInCar.API.Repositories
             }
         }
 
-        public User? getUser(string id)
+        public IEnumerable<User?> getUser(string? id)
         {
             using (var context = _dbContextFactory.CreateDbContext())
             {
-                return context.Users.Where(x => x.Id == id).FirstOrDefault();
+                if(id != null)
+                {
+                    var users = context.Users.Where(x => x.Id == id).ToList();
+                    return users;
+                }
+                return context.Users.ToList();
             }
-
         }
 
         public User? Authentication(LoginDTO userDto)
