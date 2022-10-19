@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevInCar.API.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20221014140840_AtualizaTabela1.1")]
-    partial class AtualizaTabela11
+    [Migration("20221019112022_AddDataAnottations")]
+    partial class AddDataAnottations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,11 +24,35 @@ namespace DevInCar.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("DevInCar.API.Models.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("EmailAddress")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("DevInCar.API.Models.Vehicle", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("BuyerId")
                         .HasColumnType("nvarchar(max)");
@@ -56,11 +80,13 @@ namespace DevInCar.API.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("PlateNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<double>("Potency")
                         .HasColumnType("float");
@@ -78,8 +104,8 @@ namespace DevInCar.API.Migrations
                     b.Property<int>("VehicleType")
                         .HasColumnType("int");
 
-                    b.Property<double?>("saleValue")
-                        .HasColumnType("float");
+                    b.Property<int>("WheelsNumber")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

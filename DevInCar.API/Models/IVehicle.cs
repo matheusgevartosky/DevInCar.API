@@ -4,7 +4,7 @@ namespace DevInCar.API.Models
 {
     public interface IVehicle
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         string? BuyerId { get; set; }
         string ChassisNumber { get; set; }
         string Color { get; set; }
@@ -17,9 +17,9 @@ namespace DevInCar.API.Models
         string PlateNumber { get; set; }
         double Potency { get; set; }
         string SaleDate { get; set; }
-        double? saleValue { get; set; }
         bool Status { get; set; }
         VehicleType VehicleType { get; set; }
         double Value { get; set; }
+        int WheelsNumber { get; set; }
     }
 }

@@ -14,18 +14,18 @@ namespace DevInCar.API.Services
             _vehicleRepository = vehicleRepository;
         }
 
-        public bool AddVehicle(CarDTO carDto)
+        public bool AddVehicle(Vehicle vehicle)
         {
-            Vehicle vehicle = (Vehicle)carDto;
+            
             return _vehicleRepository.AddVeiculo(vehicle);
         }
 
-        public string ChangeColor(Guid id, string color)
+        public string ChangeColor(string id, string color)
         {
             return _vehicleRepository.AlterarCor(id, color);
         }
 
-        public string ChangeValue(Guid id, double value)
+        public string ChangeValue(string id, double value)
         {
             return _vehicleRepository.ChangeValue(id, value);
         }
@@ -55,7 +55,7 @@ namespace DevInCar.API.Services
             return _vehicleRepository.GetVendidosMenorPreço(type);
         }
 
-        public bool SellVehicle(Guid id, string buyerId, DateOnly date)
+        public Vehicle SellVehicle(string id, string buyerId, DateOnly date)
         {
             return _vehicleRepository.VenderVeiculo(id, buyerId, date);
         }

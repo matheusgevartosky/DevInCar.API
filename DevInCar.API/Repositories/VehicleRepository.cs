@@ -20,27 +20,16 @@ namespace DevInCar.API.Repositories
         {
             using (var context = _dbContextFactory.CreateDbContext())
             {
-                try
-                {
                     context.Vehicles.Add(veiculo);
-                    return context.SaveChanges() != 0;
-                }catch(Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                    return false;
-                }
-
-
-                
+                    return context.SaveChanges() != 0;   
             }
-
         }
 
-        public string AlterarCor(Guid id, string Color)
+        public string AlterarCor(string id, string Color)
         {
             using (var context = _dbContextFactory.CreateDbContext())
             {
-                var veiculo = context.Vehicles.FirstOrDefault(x => x.Id == id);
+                var veiculo = context.Vehicles.FirstOrDefault(x => x.Id == id && x.Status == true);
                 if (veiculo != null)
                 {
                     veiculo.Color = Color;
@@ -51,12 +40,12 @@ namespace DevInCar.API.Repositories
             }
         }
 
-        public string ChangeValue(Guid id, double value)
+        public string ChangeValue(string id, double value)
         {
 
             using (var context = _dbContextFactory.CreateDbContext())
             {
-                var veiculo = context.Vehicles.FirstOrDefault(x => x.Id == id);
+                var veiculo = context.Vehicles.FirstOrDefault(x => x.Id == id && x.Status == true);
                 if (veiculo != null)
                 {
                     veiculo.Value = value;
@@ -64,7 +53,6 @@ namespace DevInCar.API.Repositories
                     return "Valor atualizado";
                 }
                 return "Veiculo não cadastrado.";
-
             }
         }
 
@@ -121,14 +109,14 @@ namespace DevInCar.API.Repositories
                     var veiculo = context
                         .Vehicles.Where(x => x.VehicleType == type)
                         .Where(y => y.Status == false);
-                    var maiorPreço = veiculo.OrderByDescending(x => x.saleValue).First();
+                    var maiorPreço = veiculo.OrderByDescending(x => x.Value).First();
 
                     return maiorPreço;
                 }
                 var veiculoSemTipo = context
                     .Vehicles.Where(x => x.Status == false);
 
-                var maiorPreçoSemTipo = veiculoSemTipo.OrderByDescending(x => x.saleValue).FirstOrDefault();
+                var maiorPreçoSemTipo = veiculoSemTipo.OrderByDescending(x => x.Value).FirstOrDefault();
                 return maiorPreçoSemTipo;
             }
         }
@@ -142,17 +130,17 @@ namespace DevInCar.API.Repositories
                     var veiculo = context
                         .Vehicles.Where(x => x.Equals(type))
                         .Where(y => y.Status == false);
-                    var menorPreço = veiculo.OrderByDescending(x => x.saleValue).Last();
+                    var menorPreço = veiculo.OrderByDescending(x => x.Value).Last();
                     return menorPreço;
                 }
                 var veiculoSemTipo = context
                     .Vehicles.Where(x => x.Status == false);
-                var menorPreçoSemTipo = veiculoSemTipo.OrderBy(x => x.saleValue).LastOrDefault();
+                var menorPreçoSemTipo = veiculoSemTipo.OrderBy(x => x.Value).LastOrDefault();
                 return menorPreçoSemTipo;
             }
         }
 
-        public bool VenderVeiculo(Guid id, string buyerId, DateOnly date)
+        public Vehicle VenderVeiculo(string id, string buyerId, DateOnly date)
         {
             using (var context = _dbContextFactory.CreateDbContext())
             {
@@ -162,10 +150,10 @@ namespace DevInCar.API.Repositories
                     veiculo.BuyerId = buyerId;
                     veiculo.Status = false;
                     veiculo.SaleDate = date.ToString();
-                    return context.SaveChanges() != 0;
+                    context.SaveChanges();
+                    return veiculo;
                 }
-
-                return false;
+                return null;
             }
         }
     }

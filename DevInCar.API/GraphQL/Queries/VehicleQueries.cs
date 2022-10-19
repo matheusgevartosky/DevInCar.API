@@ -9,10 +9,10 @@ namespace DevInCar.API.GraphQL.Queries
     [ExtendObjectType(OperationTypeNames.Query)]
     public class VehicleQueries
     {
-        public IEnumerable<IVehicle> GetVehicle([Service] IVehicleRepository repository,  VehicleType? type)
+        /*public IEnumerable<IVehicle> GetVehicle([Service] IVehicleRepository repository,  VehicleType? type)
         {
             return repository.GetVeiculos(type);
-        }
+        }*/
 
         public IEnumerable<IVehicle> GetVehicle([Service] IVehicleService service, VehicleType? type)
         {

@@ -6,14 +6,14 @@ namespace DevInCar.API.Repositories
     public interface IVehicleRepository
     {
         bool AddVeiculo(Vehicle veiculo);
-        string AlterarCor(Guid id, string Color);
-        string ChangeValue(Guid id, double value);
+        string AlterarCor(string id, string Color);
+        string ChangeValue(string id, double value);
         IEnumerable<IVehicle> GetVeiculos(VehicleType? type);
         IEnumerable<Vehicle> GetVeiculosDisponiveis(VehicleType? type);
         IEnumerable<Vehicle> GetVeiculosVendidos(VehicleType? type);
         Vehicle GetVendidosMaiorPreço(VehicleType? type);
         Vehicle GetVendidosMenorPreço(VehicleType? type);
 
-        bool VenderVeiculo(Guid id, string buyerId, DateOnly date);
+        Vehicle VenderVeiculo(string id, string buyerId, DateOnly date);
     }
 }

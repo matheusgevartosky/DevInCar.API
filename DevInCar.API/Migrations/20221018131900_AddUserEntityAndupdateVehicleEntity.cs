@@ -1,19 +1,32 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace DevInCar.API.Migrations
 {
-    public partial class AtualizaTabela11 : Migration
+    public partial class AddUserEntityAndupdateVehicleEntity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmailAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Vehicles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     BuyerId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ChassisNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -25,10 +38,10 @@ namespace DevInCar.API.Migrations
                     PlateNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Potency = table.Column<double>(type: "float", nullable: false),
                     SaleDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    saleValue = table.Column<double>(type: "float", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     VehicleType = table.Column<int>(type: "int", nullable: false),
-                    Value = table.Column<double>(type: "float", nullable: false)
+                    Value = table.Column<double>(type: "float", nullable: false),
+                    WheelsNumber = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,6 +51,9 @@ namespace DevInCar.API.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Users");
+
             migrationBuilder.DropTable(
                 name: "Vehicles");
         }

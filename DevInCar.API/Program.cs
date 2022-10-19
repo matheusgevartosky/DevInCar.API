@@ -2,6 +2,7 @@ using DevInCar.API.Data.Context;
 using DevInCar.API.DTOs;
 using DevInCar.API.GraphQL.Mutations;
 using DevInCar.API.GraphQL.Queries;
+using DevInCar.API.GraphQL.Subscriptions;
 using DevInCar.API.Models;
 using DevInCar.API.Repositories;
 using DevInCar.API.Services;
@@ -9,14 +10,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using AuthMiddleware = DevInCar.API.Models.AuthMiddleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
 builder.Services
-    .AddSingleton<IVehicleRepository, VehicleRepository>()
-    .AddScoped<IVehicleService, VehicleService>();
+    .AddScoped<IVehicleRepository, VehicleRepository>()
+    .AddScoped<IVehicleService, VehicleService>()
+    .AddScoped<IUserRepository, UserRepository>()
+    .AddScoped<IUserService, UserService>();
 
 builder.Services
     .AddGraphQLServer()
@@ -29,13 +33,30 @@ builder.Services
     .AddMutationType()
         .AddTypeExtension<VehiclesMutation>()
         .AddTypeExtension<SalesMutation>()
+        .AddTypeExtension<LoginMutation>()
+        .AddTypeExtension<UserMutation>()
+
+    .AddSubscriptionType()
+        .AddTypeExtension<VehiclesSubscription>()
+        .AddTypeExtension<SalesSubscription>()
 
         .AddType<Vehicle>()
+        .AddType<User>()
+        .AddType<SubscriptionView>()
         .AddType<CarDTO>()
+        .AddType<MotorcicleDTO>()
+        .AddType<TruckDTO>()
+        .AddType<LoginDTO>()
+        .AddType<UserDTO>()
 
     .AddInMemorySubscriptions()
-    .AddApolloTracing();
+    .AddApolloTracing()
 
+    .AddSocketSessionInterceptor<AuthMiddleware>();
+
+builder.Services.AddHttpContextAccessor();
+
+    
 builder.Services.AddDbContextFactory<Context>(
         options => options.UseSqlServer(builder.Configuration.GetConnectionString("DevInCarDB")
     )
@@ -52,8 +73,11 @@ builder.Services
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateIssuerSigningKey = true,
-            ValidAudience = builder.Configuration.GetSection("TokenSettings").GetValue<string>("Audience"),
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("TokenSettings").GetValue<string>("Key"))),
+            ValidAudience = builder.Configuration
+                .GetSection("TokenSettings").GetValue<string>("Audience"),
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration.GetSection("TokenSettings")
+                .GetValue<string>("Key"))),
         };
     });
 
@@ -76,12 +100,15 @@ app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseWebSockets();
+app.UseWebSockets(new WebSocketOptions()
+{
+    KeepAliveInterval = TimeSpan.FromSeconds(15)
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseEndpoints(endpoint =>
-    endpoint.MapGraphQL("/graphql") // local onde posso definir uma nova rota para o playground/banana
+    endpoint.MapGraphQL("/devincar") 
 );
 app.Run();
