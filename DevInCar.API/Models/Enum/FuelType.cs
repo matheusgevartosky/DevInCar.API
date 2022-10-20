@@ -16,6 +16,6 @@
     public enum CarFuelType
     {
         Gasolina = 1,
-        Diesel = 2
+        flex = 2
     }
 }

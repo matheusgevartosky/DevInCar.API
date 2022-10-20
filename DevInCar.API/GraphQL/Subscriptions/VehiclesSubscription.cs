@@ -9,7 +9,7 @@ namespace DevInCar.API.GraphQL.Subscriptions
     {
         [Subscribe]
         [GraphQLName("Registered_vehicle")]
-        public Vehicle addedVehicle([EventMessage] Vehicle vehicle) => vehicle;
+        public SubscriptionView addedVehicle([EventMessage] SubscriptionView vehicle) => vehicle;
 
         [Subscribe]
         [GraphQLName("Registered_vehicle(type!)")]

@@ -9,7 +9,7 @@ namespace DevInCar.API.DTOs
         public DateOnly ManufacturingDate { get; set; }
         public string name { get; set; }
         public string plateNumber { get; set; }
-        public VehicleType vehicleType { get; set; }
+        public MothorcicleType vehicleType { get; set; }
         public int potency { get; set; }
         public double value { get; set; }
         public int WheelsNumber { get; set; }
@@ -31,9 +31,9 @@ namespace DevInCar.API.DTOs
                 Status = true,
                 BuyerId = null,
                 LoadingCapacity = null,
-                VehicleType = dto.vehicleType,
+                VehicleType = (VehicleType)dto.vehicleType,
                 Id = $"mt_{Guid.NewGuid()}",
-                WheelsNumber = dto.vehicleType == VehicleType.Moto ? 2  :  3 
+                WheelsNumber = dto.vehicleType == MothorcicleType.Moto ? 2  :  3 
             };
         }
     }

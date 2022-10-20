@@ -16,8 +16,8 @@ namespace DevInCar.API.GraphQL.Mutations
         {
             var vehicle =  service.SellVehicle(id, idComprador, date);
             var returnSubscription = new SubscriptionView(vehicle);
-            await eventSender.SendAsync(vehicle.VehicleType, returnSubscription);
-            await eventSender.SendAsync(nameof(SalesSubscription.SoldVehicle), returnSubscription);
+            await eventSender.SendAsync(vehicle.VehicleType, returnSubscription).ConfigureAwait(false);
+            await eventSender.SendAsync(nameof(SalesSubscription.SoldVehicle), returnSubscription).ConfigureAwait(false);
             return vehicle;
         }
     }

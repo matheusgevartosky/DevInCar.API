@@ -1,7 +1,4 @@
-﻿using DevInCar.API.Models;
-using System.ComponentModel.DataAnnotations;
-
-namespace DevInCar.API.DTOs
+﻿namespace DevInCar.API.DTOs
 {
     public class LoginDTO
     {

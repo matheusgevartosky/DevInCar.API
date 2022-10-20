@@ -16,8 +16,15 @@ namespace DevInCar.API.GraphQL.Mutations
         {
             Vehicle vehicle = (Vehicle)input;
             var returnSubscription = new SubscriptionView(vehicle);
-            await eventSender.SendAsync(vehicle.VehicleType, returnSubscription);
-            await eventSender.SendAsync(nameof(VehiclesSubscription.addedVehicle), returnSubscription);
+            await eventSender.SendAsync(returnSubscription.VehicleType, returnSubscription).ConfigureAwait(false);
+            try
+            {
+                await eventSender.SendAsync(nameof(VehiclesSubscription.addedVehicle), returnSubscription).ConfigureAwait(false);
+            }catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            
             return service.AddVehicle(vehicle);
  
         }
@@ -27,8 +34,8 @@ namespace DevInCar.API.GraphQL.Mutations
         {
             Vehicle vehicle = (Vehicle)input;
             var returnSubscription = new SubscriptionView(vehicle);
-            await eventSender.SendAsync(vehicle.VehicleType, returnSubscription);
-            await eventSender.SendAsync(nameof(VehiclesSubscription.addedVehicle), returnSubscription);
+            await eventSender.SendAsync(vehicle.VehicleType, returnSubscription).ConfigureAwait(false);
+            await eventSender.SendAsync(nameof(VehiclesSubscription.addedVehicle), returnSubscription).ConfigureAwait(false);
             return service.AddVehicle(vehicle);
 
         }
@@ -38,8 +45,8 @@ namespace DevInCar.API.GraphQL.Mutations
         {
             Vehicle vehicle = (Vehicle)input;
             var returnSubscription = new SubscriptionView(vehicle);
-            await eventSender.SendAsync(vehicle.VehicleType, returnSubscription);
-            await eventSender.SendAsync(nameof(VehiclesSubscription.addedVehicle), returnSubscription);
+            await eventSender.SendAsync(vehicle.VehicleType, returnSubscription).ConfigureAwait(false);
+            await eventSender.SendAsync(nameof(VehiclesSubscription.addedVehicle), returnSubscription).ConfigureAwait(false);
             return service.AddVehicle(vehicle);
         }
 
