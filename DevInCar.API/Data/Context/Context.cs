@@ -16,6 +16,7 @@ namespace DevInCar.API.Data.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Vehicle>().HasData(Seeders.VehiclesSeeder);
+            modelBuilder.Entity<User>().HasData(UsersSeeds.UserSeeder);
         }
     }
 }

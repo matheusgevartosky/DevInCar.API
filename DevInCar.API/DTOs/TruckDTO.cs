@@ -35,7 +35,7 @@ namespace DevInCar.API.DTOs
                 Status = true,
                 BuyerId = null,
                 LoadingCapacity = dto.LoadingCapacity,
-                VehicleType = VehicleType.Carro,
+                VehicleType = VehicleType.Caminhonete,
                 Id = $"tk_{Guid.NewGuid()}",
                 WheelsNumber = 4
             };

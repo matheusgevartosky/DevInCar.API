@@ -128,7 +128,7 @@ namespace DevInCar.API.Repositories
                 if (type != null)
                 {
                     var veiculo = context
-                        .Vehicles.Where(x => x.Equals(type))
+                        .Vehicles.Where(x => x.VehicleType == type)
                         .Where(y => y.Status == false);
                     var menorPreço = veiculo.OrderByDescending(x => x.Value).Last();
                     return menorPreço;

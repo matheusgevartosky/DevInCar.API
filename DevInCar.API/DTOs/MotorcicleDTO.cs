@@ -12,7 +12,7 @@ namespace DevInCar.API.DTOs
         public MothorcicleType vehicleType { get; set; }
         public int potency { get; set; }
         public double value { get; set; }
-        public int WheelsNumber { get; set; }
+        
 
         public static explicit operator Vehicle(MotorcicleDTO dto)
         {
